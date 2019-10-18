@@ -11,6 +11,7 @@ public class FieldSpawner : MonoBehaviour
     private float height, width;
     public Button tilePrefab;
     public Button markPrefab;
+    public GameObject vertLine, horiLine;
     public static Button[,] field;
     public static Button[] marker;
 
@@ -21,6 +22,7 @@ public class FieldSpawner : MonoBehaviour
     {
         SetDefaultStats();
         SpawnTiles();
+        SpawnLines();
         SpawnMarks();
     }
 
@@ -43,13 +45,30 @@ public class FieldSpawner : MonoBehaviour
         {
             for (int j = 0; j < fieldHeight; j++)
             {
-                Vector3 pos = new Vector3((i - fieldWidth / 2) * width / fieldWidth, yOffset + height / 2f + (j - fieldWidth) * width / fieldWidth, 0);
+                Vector3 pos = new Vector3((i - fieldWidth / 2) * width / fieldWidth, height / yOffset - (j - fieldWidth) * width / fieldWidth, 0);
                 field[i, j] = Instantiate(tilePrefab, pos, Quaternion.identity, GameObject.Find("Canvas").transform);
                 field[i, j].GetComponentInChildren<Text>().text = "";
                 Vector2Int coordinates = new Vector2Int(i, j);
                 field[i, j].onClick.AddListener(() => markField(coordinates));
             }
         }
+    }
+
+    private void SpawnLines() {
+        Transform staticCanvas = GameObject.Find("StaticCanvas").transform;
+
+        // vertical lines
+        Vector3 pos = new Vector3(-width / 6, height / yOffset - (4 - fieldWidth) * width / fieldWidth);
+        Instantiate(vertLine, pos, Quaternion.identity, staticCanvas);
+        pos.x = width / 6;
+        Instantiate(vertLine, pos, Quaternion.identity, staticCanvas);
+
+        // horizontal lines
+        pos.x = 0;
+        pos.y = height / yOffset - (2.5f - fieldWidth) * width / fieldWidth;
+        Instantiate(horiLine, pos, Quaternion.identity, staticCanvas);
+        pos.y = height / yOffset - (5.5f - fieldWidth) * width / fieldWidth;
+        Instantiate(horiLine, pos, Quaternion.identity, staticCanvas);
     }
 
     private void SpawnMarks() {
@@ -59,7 +78,7 @@ public class FieldSpawner : MonoBehaviour
             for (int j = 0; j < markHeight; j++)
             {
                 int idx = i + j * markWidth;
-                Vector3 pos = new Vector3((i - markWidth / 2) * width / markWidth, yOffsetMark + height / 2f - (j - markWidth) * width / markWidth, 0);
+                Vector3 pos = new Vector3((i - markWidth / 2) * width / markWidth, height / yOffset + yOffsetMark * height/width - j * width / markWidth, 0);
                 marker[idx] = Instantiate(markPrefab, pos, Quaternion.identity, GameObject.Find("Canvas").transform);
                 marker[idx].GetComponentInChildren<Text>().text = idx>0 ? idx.ToString() : "X";
                 marker[idx].onClick.AddListener(() => ChangeMarker(idx));

@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Oct 17 08:45:00 CEST 2019
+#Fri Oct 18 12:20:12 CEST 2019
 60.set=ASSET
 52.set=NATIVE_RESOURCE
 53.base=/Users/bw/Documents/Coding/Unity/Sudoku Solver/Temp/gradleOut/build/intermediates/merged_assets/release/out
