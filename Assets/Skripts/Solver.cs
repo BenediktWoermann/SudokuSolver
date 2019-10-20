@@ -91,43 +91,69 @@ public static class Solver
     }
 
     public static int[,] SolveFast(int[,] input) {
-        int[,] field = (int[,])input.Clone();
-        int[,][] possibilities = new int[9,9][];
+        int[,] field;
+        int[,][] possibilities;
+        int count;
 
-        // FIND ALL NUMBER-POSSIBILITIES FOR EACH TILE IN FIELD
 
-        int count = 0;
+        while(true){
+
+            field = (int[,])input.Clone();
+            possibilities = new int[9,9][];
+
+            // FIND ALL NUMBER-POSSIBILITIES FOR EACH TILE IN FIELD
+
+            count = 0;
+            bool noChange = true;
+            for(int x = 0; x < 9; x++) {
+                for(int y = 0; y<9; y++) {
+                    //foreach tile:
+                    if (input[x, y] == 0) {
+                        count++;
+                        int[] possib = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                        // check for non possible numbers due to rows and columns
+                        for (int i = 0; i < 9; i++) {
+                            if (input[x, i] != 0) possib[input[x, i] - 1] = 0;
+                            if (input[i, y] != 0) possib[input[i, y] - 1] = 0;
+                        }
+                        // check for non possible numbers due to small field
+                        for (int i = 0; i < 3; i++) {
+                            for (int j = 0; j < 3; j++) {
+                                if (input[x - x % 3 + i, y - y % 3 + j] != 0) possib[input[x - x % 3 + i, y - y % 3 + j] - 1] = 0;
+                            }
+                        }
+                        // copy possib to new array with no 0
+                        int cnt = 0;
+                        for (int i = 0; i < 9; i++) {
+                            if (possib[i] != 0) cnt++;
+                        }
+                        possibilities[x, y] = new int[cnt];
+                        cnt = 0;
+                        for (int i = 0; i < 9; i++) {
+                            if (possib[i] != 0) {
+                                possibilities[x, y][cnt] = possib[i];
+                                cnt++;
+                            }
+                        }
+                        // if only one possibility, fill it permanently in the corresponding tile
+                        if(possibilities[x,y].Length == 1){
+                            input[x,y] = possibilities[x,y][0];
+                            noChange = false;
+                        }
+                        // if at least one tile was filled, start whole function again with filed field
+
+                    }
+                }
+            }
+            if(noChange) break;
+
+        }
+
+        // fill first possibility
         for(int x = 0; x < 9; x++) {
             for(int y = 0; y<9; y++) {
                 //foreach tile:
                 if (input[x, y] == 0) {
-                    count++;
-                    int[] possib = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-                    // check for non possible numbers due to rows and columns
-                    for (int i = 0; i < 9; i++) {
-                        if (input[x, i] != 0) possib[input[x, i] - 1] = 0;
-                        if (input[i, y] != 0) possib[input[i, y] - 1] = 0;
-                    }
-                    // check for non possible numbers due to small field
-                    for (int i = 0; i < 3; i++) {
-                        for (int j = 0; j < 3; j++) {
-                            if (input[x - x % 3 + i, y - y % 3 + j] != 0) possib[input[x - x % 3 + i, y - y % 3 + j] - 1] = 0;
-                        }
-                    }
-                    // copy possib to new array with no 0
-                    int cnt = 0;
-                    for (int i = 0; i < 9; i++) {
-                        if (possib[i] != 0) cnt++;
-                    }
-                    possibilities[x, y] = new int[cnt];
-                    cnt = 0;
-                    for (int i = 0; i < 9; i++) {
-                        if (possib[i] != 0) {
-                            possibilities[x, y][cnt] = possib[i];
-                            cnt++;
-                        }
-                    }
-                    // fill first possibility
                     if (possibilities[x, y].Length == 0) {
                         Debug.LogError("not solvable");
                         Debug.Log("x: " + x + "     y: " + y);
@@ -137,6 +163,7 @@ public static class Solver
                 }
             }
         }
+
 
         // check first field
         if (IsValid(field))
