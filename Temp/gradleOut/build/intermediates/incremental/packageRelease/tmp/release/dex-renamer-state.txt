@@ -1,4 +1,0 @@
-#Fri Oct 18 12:20:12 CEST 2019
-base.0=/Users/bw/Documents/Coding/Unity/Sudoku Solver/Temp/gradleOut/build/intermediates/transforms/dexMerger/release/0
-path.0=classes.dex
-renamed.0=classes.dex
