@@ -90,6 +90,122 @@ public static class Solver
         return field;
     }
 
+    // do as many steps as needed till a error appears, go one step back and try another possibility
+    public static int[,] SolveBackTracking(int[,] input){
+        int[,] field = (int[,])input.Clone();
+        int[,][] possibilities = new int[9,9][];;
+        int count = 0;
+
+            // FIND ALL NUMBER-POSSIBILITIES FOR EACH TILE IN FIELD
+            for(int x = 0; x < 9; x++) {
+                for(int y = 0; y<9; y++) {
+                    //foreach tile:
+                    if (input[x, y] == 0) {
+                        count++;
+                        int[] possib = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                        // check for non possible numbers due to rows and columns
+                        for (int i = 0; i < 9; i++) {
+                            if (input[x, i] != 0) possib[input[x, i] - 1] = 0;
+                            if (input[i, y] != 0) possib[input[i, y] - 1] = 0;
+                        }
+                        // check for non possible numbers due to small field
+                        for (int i = 0; i < 3; i++) {
+                            for (int j = 0; j < 3; j++) {
+                                if (input[x - x % 3 + i, y - y % 3 + j] != 0) possib[input[x - x % 3 + i, y - y % 3 + j] - 1] = 0;
+                            }
+                        }
+                        // copy possib to new array with no zeros
+                        int cnt = 0;
+                        for (int i = 0; i < 9; i++) {
+                            if (possib[i] != 0) cnt++;
+                        }
+                        possibilities[x, y] = new int[cnt];
+                        cnt = 0;
+                        for (int i = 0; i < 9; i++) {
+                            if (possib[i] != 0) {
+                                possibilities[x, y][cnt] = possib[i];
+                                cnt++;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        int[] state = new int[count];
+        for(int i = 0; i<count; i++) {
+            state[i] = -1;
+        }
+        state[0] = 0;
+
+        // ITERATE THROUGH THOSE POSSIBILITIES
+
+        Vector2Int[] coordinates = new Vector2Int[count];
+        int tileNumber = 0;
+        for(int x = 0; x<9; x++) {
+            for(int y = 0; y<9; y++) {
+                if(input[x,y] == 0) {
+                    coordinates[tileNumber] = new Vector2Int(x,y);
+                    tileNumber++;
+                }
+            }
+        }
+        if (count == 0)
+        {
+            Debug.Log("no empty tile!");
+            return input;
+        }
+
+        //Try -> Error -> Backtracking
+        //start with: first empty tile, first possibility, leave all others empty
+        field[coordinates[0].x, coordinates[0].y] = possibilities[coordinates[0].x, coordinates[0].y][0];
+        int currentTile = 0;
+        bool stepBack = false;
+        while(true){
+
+            if(IsValid(field, false) && !stepBack){
+                // step is ok for now, continue with next tile, or, if field is full, return field
+                Debug.Log("next tile");
+                // current tile is the last one and field is valid -> retrun field
+                if(currentTile+1 >= state.Length) return field;
+
+                // current tile isn't the last one, edit successor
+                currentTile++;
+                Debug.Log("coo-len: " + coordinates.Length + "  curr-tile: " + currentTile + "  state-len: " + state.Length);
+                Vector2Int coo = coordinates[currentTile];
+                state[currentTile]++;
+                field[coo.x, coo.y] = possibilities[coo.x,coo.y][state[currentTile]];
+                stepBack = false;
+
+            }else{
+                // step isn't valid, try next possible number for this tile or, if none left, continue with the previous tile
+
+                if (currentTile == -1)
+                {
+                    Debug.Log("no solution found!");
+                    return field;
+                }
+                Vector2Int coo = coordinates[currentTile];
+                // try next possible number in current tile if there is a next one, else go one tile back, try next value (in the next iteration) and reset the current tile's state
+                if(state[currentTile]+1 < possibilities[coo.x,coo.y].Length){
+                    Debug.Log("same tile");
+                    state[currentTile]++;
+                    field[coo.x,coo.y] = possibilities[coo.x,coo.y][state[currentTile]];
+                    stepBack = false;
+                }else{
+                    Debug.Log("last tile");
+                    state[currentTile] = -1;
+                    field[coo.x,coo.y] = 0;
+                    currentTile--;
+                    stepBack = true;
+                }
+            }
+
+
+
+        }
+    }
+
     public static int[,] SolveFast(int[,] input) {
         int[,] field;
         int[,][] possibilities;
@@ -342,7 +458,7 @@ public static class Solver
         }
     }
 
-    public static bool IsValid(int[,] field)
+    public static bool IsValid(int[,] field, bool filled = true)
     {
         if (field.GetLength(0) != field.GetLength(1) || (field.GetLength(0) != 3 && field.GetLength(0) != 9)) return false;
         if (field.GetLength(0) == 3)
@@ -360,6 +476,8 @@ public static class Solver
                 for (int j = 0; j < field.GetLength(1); j++)
                 {
                     // if foundValues of this position is already true, a pair was found, so the field isn't valid
+                    if (field[i, j] == 0 && filled) return false;
+                    if(field[i,j] == 0) break;
                     if (foundValues[field[i, j]-1]) return false;
                     foundValues[field[i, j]-1] = true;
                 }
@@ -385,7 +503,7 @@ public static class Solver
                         }
                     }
                     // return false if one of the small fields is not valid
-                    if (!IsValid(smallField)) return false;
+                    if (!IsValid(smallField, filled)) return false;
                 }
             }
 
@@ -400,6 +518,8 @@ public static class Solver
             {
                 for (int y = 0; y < field.GetLength(1); y++)
                 {
+                    if(field[x,y] == 0 && filled) return false;
+                    if(field[x,y] == 0) break;
                     if (foundValues[field[x, y]-1]) return false;
                     foundValues[field[x, y]-1] = true;
                 }
@@ -420,6 +540,8 @@ public static class Solver
             {
                 for (int x = 0; x < field.GetLength(0); x++)
                 {
+                    if(field[x,y] == 0 && filled) return false;
+                    if(field[x,y] == 0) break;
                     if (foundValues[field[x, y]-1]) return false;
                     foundValues[field[x, y]-1] = true;
                 }
@@ -429,6 +551,24 @@ public static class Solver
                     foundValues[i] = false;
                 }
             }
+
+            if (!filled) {
+                int[] numberCount = new int[9];
+                for(int i = 0; i<9; i++) {
+                    numberCount[i] = 0;
+                }
+                for(int i = 0; i<9; i++) { 
+                    for(int j = 0; j<9; j++) { 
+                        if(field[i,j] != 0) {
+                            numberCount[field[i, j]-1]++;
+                        }
+                    }
+                }
+                for(int i = 0; i<9; i++) {
+                    if (numberCount[i] > 9) return false;
+                }
+            }
+
             // no mistakes found -> field is valid
             return true;
         }

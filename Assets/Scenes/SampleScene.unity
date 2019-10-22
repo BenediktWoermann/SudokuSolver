@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3275dd51a2aa84c93a07073d7cc37695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stdColor: {r: 0.32941177, g: 0.90588236, b: 0.53333336, a: 0.7411765}
+  stdColor: {r: 1, g: 0.7176471, b: 0, a: 1}
   yOffset: -10
   yOffsetMark: -0.2
   tilePrefab: {fileID: 6757478891751001666, guid: b2ab6499ce5994877a2e3b00d6c08f4f,
