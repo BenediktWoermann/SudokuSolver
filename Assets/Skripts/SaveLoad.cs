@@ -51,6 +51,6 @@ public class DataType
         gMarkerColor = Stats.hMarkerColor.g;
         bMarkerColor = Stats.hMarkerColor.b;
         backgroundGreyValue = Stats.backgroundColor.r;
-        Debug.Log(Stats.backgroundColor.r);
+        //Debug.Log(Stats.backgroundColor.r);
     }
 }
