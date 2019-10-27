@@ -62,8 +62,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Skripts\AnimationManager.cs" />
     <Compile Include="Assets\Skripts\FieldSpawner.cs" />
+    <Compile Include="Assets\Skripts\Manager.cs" />
+    <Compile Include="Assets\Skripts\SaveLoad.cs" />
     <Compile Include="Assets\Skripts\Solver.cs" />
+    <Compile Include="Assets\Skripts\Stats.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>/Users/bw/Documents/Coding/Unity/Sudoku Solver/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

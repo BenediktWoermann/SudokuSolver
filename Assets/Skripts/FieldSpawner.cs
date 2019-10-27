@@ -5,15 +5,19 @@ using UnityEngine.UI;
 
 public class FieldSpawner : MonoBehaviour
 {
-    public Color stdColor;
     public float yOffset, yOffsetMark;
     public static int fieldWidth, fieldHeight, markWidth, markHeight;
     private float height, width;
     public Button tilePrefab;
     public Button markPrefab;
+    public Button deleteBtn;
+    public Button solveBtn;
     public GameObject vertLine, horiLine;
     public static Button[,] field;
     public static Button[] marker;
+
+    public Slider mainColorSlider, markerColorSlider, backgroundColorSlider;
+    public Image mainColorDisplay, markerColorDisplay, backgroundColorDisplay;
 
     private int activeMarker;
 
@@ -26,7 +30,29 @@ public class FieldSpawner : MonoBehaviour
         SpawnMarks();
     }
 
+    private void Update()
+    {
+         
+    }
+
     private void SetDefaultStats() {
+        mainColorDisplay.color = Stats.hMainColor;
+        markerColorDisplay.color = Stats.hMainColor;
+        backgroundColorDisplay.color = Stats.backgroundColor;
+
+        mainColorSlider.onValueChanged.AddListener(delegate {
+            ChangeColor("main", mainColorSlider.value);
+        });
+
+        markerColorSlider.onValueChanged.AddListener(delegate {
+            ChangeColor("marker", markerColorSlider.value);
+        });
+
+        backgroundColorSlider.onValueChanged.AddListener(delegate
+        {
+            ChangeColor("background", backgroundColorSlider.value);
+        });
+
         fieldWidth = 9;
         fieldHeight = 9;
         markWidth = 5;
@@ -37,6 +63,57 @@ public class FieldSpawner : MonoBehaviour
 
         height = Camera.main.orthographicSize * 2f;
         width = height / Screen.height * Screen.width;
+    }
+
+    public void ChangeColor(string identifier, float value) {
+        float h, s, v;
+        switch (identifier)
+        {
+            case "main":
+                byte alpha1 = Stats.hMainColor.a;
+                print(Stats.hMainColor);
+                Color.RGBToHSV(Stats.hMainColor, out h, out s, out v);
+                print(h);
+                h = value;
+                print(h);
+                Stats.hMainColor = Color.HSVToRGB(h, s, v);
+                Stats.hMainColor.a = alpha1;
+                print(Stats.hMainColor);
+                Save_Load.SaveData();
+                for(int i = 0; i<field.GetLength(0); i++) { 
+                    for(int j = 0; j<field.GetLength(1); j++) {
+                        field[i, j].GetComponent<Image>().color = Stats.hMainColor;
+                    }
+                }
+                solveBtn.GetComponent<Image>().color = Stats.hMainColor;
+                deleteBtn.GetComponent<Image>().color = Stats.hMainColor;
+                mainColorDisplay.color = Stats.hMainColor;
+                break;
+            case "marker":
+                byte alpha2 = Stats.hMainColor.a;
+                Color.RGBToHSV(Stats.hMarkerColor, out h, out s, out v);
+                h = value;
+                Stats.hMarkerColor = Color.HSVToRGB(h, s, v);
+                Stats.hMarkerColor.a = alpha2;
+                Save_Load.SaveData();
+                for (int i = 0; i<marker.Length; i++) {
+                    marker[i].GetComponent<Image>().color = Stats.hMarkerColor;
+                }
+                markerColorDisplay.color = Stats.hMarkerColor;
+                break;
+            case "background":
+                Stats.backgroundColor = new Color32((byte)value, (byte)value, (byte)value, 255);
+                Save_Load.SaveData();
+                Camera.main.backgroundColor = Stats.backgroundColor;
+                backgroundColorDisplay.color = Stats.backgroundColor;
+                break;
+        }
+    }
+
+    public void Erase() { 
+        foreach(Button b in field) {
+            b.GetComponentInChildren<Text>().text = "";
+        }
     }
 
     private void SpawnTiles() {
@@ -113,6 +190,9 @@ public class FieldSpawner : MonoBehaviour
         {
             for(int j = 0; j<9; j++)
             {
+                if(field[i,j].GetComponentInChildren<Text>().text == "") {
+                    field[i, j].GetComponentInChildren<Text>().color = Stats.hMainColor;
+                }
                 field[i, j].GetComponentInChildren<Text>().text = solution[i, j]==0 ? "" : solution[i, j].ToString();
             }
         }
@@ -122,8 +202,7 @@ public class FieldSpawner : MonoBehaviour
         activeMarker = newMarker;
         for(int i = 0; i<marker.Length; i++)
         {
-            marker[i].GetComponent<Image>().color = Color.red;
-            marker[i].GetComponent<Image>().color = stdColor;
+            marker[i].GetComponent<Image>().color = Stats.hMarkerColor;
         }
         marker[newMarker].GetComponent<Image>().color = Color.cyan;
     }
@@ -131,5 +210,6 @@ public class FieldSpawner : MonoBehaviour
     public void markField(Vector2Int coordinates) {
         Button toMark = field[coordinates.x, coordinates.y];
         toMark.GetComponentInChildren<Text>().text = activeMarker > 0 ? activeMarker.ToString() : "";
+        toMark.GetComponentInChildren<Text>().color = Color.white;
     }
 }

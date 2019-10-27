@@ -1,8 +1,11 @@
 ﻿<Properties StartupConfiguration="{32FE910A-FBAA-06F4-52E3-2B34C90C69A0}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Skripts/FieldSpawner.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Skripts/Manager.cs">
     <Files>
-      <File FileName="Assets/Skripts/FieldSpawner.cs" Line="104" Column="13" />
-      <File FileName="Assets/Skripts/Solver.cs" Line="194" Column="38" />
+      <File FileName="Assets/Skripts/Solver.cs" Line="1" Column="1" />
+      <File FileName="Assets/Skripts/FieldSpawner.cs" />
+      <File FileName="Assets/Skripts/Manager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Skripts/Stats.cs" />
+      <File FileName="Assets/Skripts/SaveLoad.cs" Line="26" Column="71" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -10,7 +13,7 @@
           <Node name="Sudoku Solver" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Skripts" expanded="True">
-                <Node name="FieldSpawner.cs" selected="True" />
+                <Node name="Manager.cs" selected="True" />
               </Node>
             </Node>
           </Node>
@@ -20,7 +23,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="f11b5921-ad62-4548-9251-2b52a627fd52" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="7a2923e5-ef82-4fbc-88e2-a2daf1a3065c" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

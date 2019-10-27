@@ -7,84 +7,73 @@ public static class Solver
     private static bool lastStep;
 
     public static int[,] SolveObvious(int[,] input) {
-        int[,] field = input;
+        int[,] field;
+        int[,][] possibilities;
+        int count;
+
 
         while (true)
         {
-            bool noChange = true;
-            // small fields
-            int count = 0;
-            int sum = 0;
-            Vector2Int empty = new Vector2Int(0, 0);
-            for (int xOffset = 0; xOffset < 7; xOffset += 3)
-            {
-                for (int yOffset = 0; yOffset < 7; yOffset += 3)
-                {
-                    for (int x = 0; x < 3; x++)
-                    {
-                        for (int y = 0; y < 3; y++)
-                        {
-                            if (field[xOffset + x, yOffset + y] == 0)
-                            {
-                                count++;
-                                empty = new Vector2Int(xOffset + x, yOffset + y);
-                            }
-                            sum += field[xOffset + x, yOffset + y];
-                        }
-                    }
-                    if (count == 1)
-                    {
-                        field[empty.x, empty.y] = 45 - sum;
-                        noChange = false;
-                    }
-                    sum = 0;
-                    count = 0;
-                }
-            }
 
-            // columns
+            field = (int[,])input.Clone();
+            possibilities = new int[9, 9][];
+
+            // FIND ALL NUMBER-POSSIBILITIES FOR EACH TILE IN FIELD
+
+            count = 0;
+            bool noChange = true;
             for (int x = 0; x < 9; x++)
             {
-                count = 0;
-                sum = 0;
                 for (int y = 0; y < 9; y++)
                 {
-                    if (field[x, y] == 0)
+                    //foreach tile:
+                    if (input[x, y] == 0)
                     {
                         count++;
-                        empty = new Vector2Int(x, y);
+                        int[] possib = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                        // check for non possible numbers due to rows and columns
+                        for (int i = 0; i < 9; i++)
+                        {
+                            if (input[x, i] != 0) possib[input[x, i] - 1] = 0;
+                            if (input[i, y] != 0) possib[input[i, y] - 1] = 0;
+                        }
+                        // check for non possible numbers due to small field
+                        for (int i = 0; i < 3; i++)
+                        {
+                            for (int j = 0; j < 3; j++)
+                            {
+                                if (input[x - x % 3 + i, y - y % 3 + j] != 0) possib[input[x - x % 3 + i, y - y % 3 + j] - 1] = 0;
+                            }
+                        }
+                        // copy possib to new array with no 0
+                        int cnt = 0;
+                        for (int i = 0; i < 9; i++)
+                        {
+                            if (possib[i] != 0) cnt++;
+                        }
+                        possibilities[x, y] = new int[cnt];
+                        cnt = 0;
+                        for (int i = 0; i < 9; i++)
+                        {
+                            if (possib[i] != 0)
+                            {
+                                possibilities[x, y][cnt] = possib[i];
+                                cnt++;
+                            }
+                        }
+                        // if only one possibility, fill it permanently in the corresponding tile
+                        if (possibilities[x, y].Length == 1)
+                        {
+                            input[x, y] = possibilities[x, y][0];
+                            noChange = false;
+                        }
+                        // if at least one tile was filled, start whole function again with filed field
+
                     }
-                    sum += field[x, y];
-                }
-                if (count == 1)
-                {
-                    field[empty.x, empty.y] = 45 - sum;
-                    noChange = false;
                 }
             }
-
-            // rows
-            for (int y = 0; y < 9; y++)
-            {
-                count = 0;
-                sum = 0;
-                for (int x = 0; x < 9; x++)
-                {
-                    if (field[x, y] == 0)
-                    {
-                        count++;
-                        empty = new Vector2Int(x, y);
-                    }
-                    sum += field[x, y];
-                }
-                if (count == 1)
-                {
-                    field[empty.x, empty.y] = 45 - sum;
-                    noChange = false;
-                }
-            }
-
             if (noChange) break;
+
         }
 
         return field;
