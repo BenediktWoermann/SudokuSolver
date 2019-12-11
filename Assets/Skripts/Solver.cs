@@ -2,9 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class Solver
+public static class SolverComplicated
 {
     private static bool lastStep;
+
+    // Variables for SolveBackTrackingStep
+    public static int[,] inputfield, editingfield;
+    public static int[] missingNrs, possibState;
+    public static int[,][] possib;
+    public static Vector2Int[] emptyCoordinates;
+    public static int currentTileNr;
+    public static bool backInNextStep;
 
     public static int[,] SolveObvious(int[,] input) {
         int[,] field;
@@ -77,6 +85,215 @@ public static class Solver
         }
 
         return field;
+    }
+
+    //Finds all combinations of numbers to fit into the field
+    public static int[,][] FindPossibilitiesForField(int[,] field) {
+        int[,][] output = new int[9,9][];
+        for(int x = 0; x<9; x++) { 
+            for(int y = 0; y<9; y++) { 
+                if(field[x,y] == 0) {
+                    output[x, y] = FindPossibilitiesForEmptyTile(field, new Vector2Int(x, y));
+                }
+            }
+        }
+        return output;
+    }
+
+    //Finds all numbers which fit in a specific tile of an field
+    public static int[] FindPossibilitiesForEmptyTile(int[,]field, Vector2Int coordinates) {
+        if (field[coordinates.x, coordinates.y] != 0) return null;
+
+        int x = coordinates.x;
+        int y = coordinates.y;
+
+        int[] allpossib = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+
+        // check for non possible numbers due to rows and columns
+        for (int i = 0; i < 9; i++)
+        {
+            if (field[x, i] != 0) allpossib[field[x, i] - 1] = 0;
+            if (field[i, y] != 0) allpossib[field[i, y] - 1] = 0;
+        }
+
+
+        // check for non possible numbers due to small field
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (field[x - x % 3 + i, y - y % 3 + j] != 0) allpossib[field[x - x % 3 + i, y - y % 3 + j] - 1] = 0;
+            }
+        }
+
+
+        // copy possib to new array with no zeros
+        int cnt = 0;
+        for (int i = 0; i < 9; i++)
+        {
+            if (allpossib[i] != 0) cnt++;
+        }
+        int[] output = new int[cnt];
+        cnt = 0;
+        for (int i = 0; i < 9; i++)
+        {
+            if (allpossib[i] != 0)
+            {
+                output[cnt] = allpossib[i];
+                cnt++;
+            }
+        }
+
+
+        return output;
+    }
+
+    //Finds all numbers in an unsolved sudoku field and writes it in an int array with length 10, where every slot is a count for the number "index", and the "0" slot displays the amount of empty tiles.
+    public static int[] FindMissingNumbersInField(int[,] field)
+    {
+        int[] output = new int[10];
+        output[0] = 0;
+        for(int i = 1; i<10; i++) {
+            output[i] = 9;
+        }
+        foreach(int i in field) {
+            if (i != 0) output[i]--;
+            else output[0]++;
+        }
+
+        return output;
+    }
+
+    public static Vector2Int[] FindMissingCoordinates(int[,] field) {
+        Vector2Int[] output;
+        int count = 0;
+        for(int i = 0; i<field.GetLength(0); i++) { 
+            for(int j = 0; j<field.GetLength(1); j++) {
+                if (field[i, j] == 0) count++;
+            }
+        }
+        output = new Vector2Int[count];
+        count = 0;
+        for (int i = 0; i < field.GetLength(0); i++)
+        {
+            for (int j = 0; j < field.GetLength(1); j++)
+            {
+                if (field[i, j] == 0)
+                {
+                    output[count] = new Vector2Int(i, j);
+                    count++;
+                }
+            }
+        }
+        return output;
+    }
+
+    // return if algorithm has ended
+    public static bool SolveBackTrackingStep(int[,] input, bool firstIteration = false) {
+
+
+        if (firstIteration) {
+            possib = FindPossibilitiesForField(input);
+            editingfield = input;
+            missingNrs = FindMissingNumbersInField(input);
+            if (missingNrs[0] == 0) return true;
+            possibState = new int[missingNrs[0]];
+            for(int i = 1; i<possibState.Length; i++) {
+                possibState[i] = -1;
+            }
+            possibState[0] = 0;
+            emptyCoordinates = FindMissingCoordinates(input);
+            editingfield[emptyCoordinates[0].x, emptyCoordinates[0].y] = possib[emptyCoordinates[0].x, emptyCoordinates[0].y][0];
+            missingNrs[possib[emptyCoordinates[0].x, emptyCoordinates[0].y][0]]--;
+            currentTileNr = 0;
+            backInNextStep = false;
+            if (missingNrs[0] == 0) return true;
+            return false;
+        }
+
+
+        else {
+            //Try -> Error -> Backtracking
+            //start with: first empty tile, first possibility, leave all others empty
+
+                if (IsValid(editingfield, false) && !backInNextStep)
+                {
+                    // step is ok for now, continue with next tile, or, if field is full, return field
+                    Debug.Log("next tile");
+                    // current tile is the last one and field is valid -> retrun field
+                    if (currentTileNr + 1 >= possibState.Length) return true;
+
+                    // current tile isn't the last one, edit successor
+                    currentTileNr++;
+                    Debug.Log("coo-len: " + emptyCoordinates.Length + "  curr-tile: " + currentTileNr + "  state-len: " + possibState.Length);
+                    Vector2Int coo = emptyCoordinates[currentTileNr];
+    FindNextStep:
+                    if (possibState[currentTileNr] >= 0 && possib[coo.x, coo.y][possibState[currentTileNr]] > 0)
+                    {
+                        missingNrs[possib[coo.x, coo.y][possibState[currentTileNr]]]++;
+                    }
+                    if(possibState[currentTileNr] >= possib[coo.x, coo.y].Length-1) {
+                        backInNextStep = true;
+                        return false;
+                    }
+                    possibState[currentTileNr]++;
+                    missingNrs[possib[coo.x, coo.y][possibState[currentTileNr]]]--;
+                    if (missingNrs[possib[coo.x, coo.y][possibState[currentTileNr]]] < 0)
+                    {
+                        goto FindNextStep;
+                    }
+                    editingfield[coo.x, coo.y] = possib[coo.x, coo.y][possibState[currentTileNr]];
+
+                backInNextStep = false;
+                return false;
+                }
+                else
+                {
+                    // step isn't valid, try next possible number for this tile or, if none left, continue with the previous tile
+
+                    if (currentTileNr == -1)
+                    {
+                        Debug.Log("no solution found!");
+                        return true;
+                    }
+                    Vector2Int coo = emptyCoordinates[currentTileNr];
+                    // try next possible number in current tile if there is a next one, else go one tile back, try next value (in the next iteration) and reset the current tile's state
+                    if (possibState[currentTileNr] + 1 < possib[coo.x, coo.y].Length)
+                    {
+                        Debug.Log("same tile");
+    FindNextStep2:
+                        if (possibState[currentTileNr] >= 0 && possib[coo.x, coo.y][possibState[currentTileNr]] > 0)
+                        {
+                            missingNrs[possib[coo.x, coo.y][possibState[currentTileNr]]]++;
+                        }
+                        if(possibState[currentTileNr] >= possib[coo.x, coo.y].Length - 1) {
+                            goto StepBack;
+                        }
+                        possibState[currentTileNr]++;
+                        missingNrs[possib[coo.x,coo.y][possibState[currentTileNr]]]--;
+                        if (missingNrs[possib[coo.x, coo.y][possibState[currentTileNr]]] < 0)
+                        {
+                            goto FindNextStep2;
+                        }
+                        editingfield[coo.x, coo.y] = possib[coo.x, coo.y][possibState[currentTileNr]];
+                        backInNextStep = false;
+                        return false;
+                    }
+    StepBack:
+                        Debug.Log("last tile");
+                        missingNrs[possib[coo.x, coo.y][possibState[currentTileNr]]]++;
+                        possibState[currentTileNr] = -1;
+                        editingfield[coo.x, coo.y] = 0;
+                        currentTileNr--;
+                        backInNextStep = true;
+
+                    return false;
+                }
+
+        }
+
+
     }
 
     // do as many steps as needed till a error appears, go one step back and try another possibility

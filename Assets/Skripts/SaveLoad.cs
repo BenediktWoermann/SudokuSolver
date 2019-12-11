@@ -54,3 +54,9 @@ public class DataType
         //Debug.Log(Stats.backgroundColor.r);
     }
 }
+
+[System.Serializable]
+public class History {
+    public int[][,] fieldlist;
+    public int[][,] inputlist;
+} 
