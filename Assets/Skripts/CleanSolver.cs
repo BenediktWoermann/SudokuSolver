@@ -47,6 +47,10 @@ public class Solver
         if (field.firstEmpty != null) active = field.firstEmpty;
     }
 
+    public void StopBacktracking() {
+        backtrackingRunning = false;
+    }
+
     public bool BacktrackingStep() {
         Debug.Log(active.row + "  " + active.column);
         if (field.GetAmountOfMissingValues() == 0 && field.IsValid())
