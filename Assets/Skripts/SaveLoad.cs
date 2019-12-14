@@ -40,6 +40,7 @@ public static class Save_Load
 public class DataType
 {
     public byte aMainColor, rMainColor, gMainColor, bMainColor, aMarkerColor, rMarkerColor, gMarkerColor, bMarkerColor, backgroundGreyValue;
+    public int speed;
 
     public DataType() {
         aMainColor = Stats.hMainColor.a;
@@ -51,6 +52,7 @@ public class DataType
         gMarkerColor = Stats.hMarkerColor.g;
         bMarkerColor = Stats.hMarkerColor.b;
         backgroundGreyValue = Stats.backgroundColor.r;
+        speed = Stats.speed;
         //Debug.Log(Stats.backgroundColor.r);
     }
 }

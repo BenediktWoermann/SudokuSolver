@@ -205,7 +205,7 @@ public class FieldSpawner : MonoBehaviour
                 inputBackup[i, j] = numbers[i, j];
             }
         }
-        solver = new Solver(new field(numbers));
+        solver = new Solver(new field(numbers), 30);
         solver.Backtracking();
     }
 

@@ -23,11 +23,13 @@ public class CleanSolver : MonoBehaviour
 
 public class Solver 
 {
+    int repetitionRate;
     private tile active;
     public field field;
     private bool backtrackingRunning;
 
-    public Solver(field fieldToSolve) {
+    public Solver(field fieldToSolve, int frameRepetitionRate = 1) {
+        repetitionRate = frameRepetitionRate;
         field = fieldToSolve;
         field.GetPossibleValues();
         backtrackingRunning = false;
@@ -38,7 +40,11 @@ public class Solver
     {
         // check if backtracking should run, then check if it returns true. 
         // If so, it has finished and "backtrackingRunning can be set to "false".
-        if (backtrackingRunning && BacktrackingStep()) backtrackingRunning = false;
+        repetitionRate = Stats.speed;
+        for(int i = 0; i<repetitionRate; i++)
+        {
+            if (backtrackingRunning && BacktrackingStep()) backtrackingRunning = false;
+        }
     }
 
     public void Backtracking() {

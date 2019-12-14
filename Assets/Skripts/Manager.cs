@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
 {
-    public Slider sliderMainColor, sliderMarkerColor, sliderBackgroundColor;
+    public Slider sliderMainColor, sliderMarkerColor, sliderBackgroundColor, sliderSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +21,13 @@ public class Manager : MonoBehaviour
 
     private void LoadColor() {
         DataType read = Save_Load.LoadData();
+
+        Stats.speed = 10;
+        if(read != null)
+        {
+            Stats.speed = read.speed;
+            sliderSpeed.value = Stats.speed;
+        }
 
         Stats.hMainColor = new Color32(84, 231, 136, 189);
         if (read != null)

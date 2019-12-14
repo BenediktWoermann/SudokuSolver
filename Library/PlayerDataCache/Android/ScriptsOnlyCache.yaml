@@ -5,6 +5,7 @@ ScriptsOnlyBuild:
     - CleanSolver
     - FieldSpawner
     - Manager
+    - changeTextOnValue
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
     - UnityEditor.Tilemaps.GridPaletteBrushes
@@ -71,6 +72,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 11620}
     - Class: 114
       Script: {instanceID: 11654}
+    - Class: 114
+      Script: {instanceID: 17492}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -412,7 +415,7 @@ ScriptsOnlyBuild:
     className: TimelineAsset
   - hash:
       serializedVersion: 2
-      Hash: 75df25d425a061cba5125c02a0d2e58a
+      Hash: f6b94944c9110d457a8fef1db76fb46b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Manager
@@ -548,6 +551,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 1028c39545bcfa841aaab54121e69a47
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: changeTextOnValue
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene.unity

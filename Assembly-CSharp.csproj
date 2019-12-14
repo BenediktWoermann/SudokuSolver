@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\changeTextOnValue.cs" />
     <Compile Include="Assets\Skripts\AnimationManager.cs" />
     <Compile Include="Assets\Skripts\CleanSolver.cs" />
     <Compile Include="Assets\Skripts\FieldSpawner.cs" />
