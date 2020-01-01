@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using System.Linq;
 
 public static class Save_Load
 {
@@ -14,6 +15,92 @@ public static class Save_Load
         DataType data = new DataType();
         formatter.Serialize(stream, data);
         stream.Close();
+    }
+
+    public static void SavePattern(int[,] values) {
+        DeleteDuplicants(values);
+        if (values.GetLength(0) != 9 || values.GetLength(1) != 9)
+        {
+            Debug.LogError("Dimension Error!");
+            return;
+        }
+
+        // copy value field to simple array in order to save it
+        int[] toSave = new int[81];
+        for(int i = 0; i<9; i++)
+        {
+            for(int j = 0; j<9; j++)
+            {
+                toSave[i * 9 + j] = values[i, j]; 
+            }
+        }
+
+        // amount array has the information, how many fields are already stored
+        int[] amount = PlayerPrefsX.GetIntArray("amount");
+        int id = 0;
+        if (amount.Length == 1) id = amount[0];
+
+        // if there are already 6 elements saved, delete the oldest 
+        if(id >= 6)
+        {
+            for(int i = 0; i<5; i++)
+            {
+                PlayerPrefsX.SetIntArray("Pattern" + i, PlayerPrefsX.GetIntArray("Pattern" + (i + 1).ToString()));
+            }
+            id = 5;
+        }
+        string name = "Pattern" + id.ToString();
+        PlayerPrefsX.SetIntArray(name, toSave);
+        amount = new int[1];
+        amount[0] = id + 1;
+        PlayerPrefsX.SetIntArray("amount", amount);
+    }
+
+    public static void DeleteDuplicants(int[,] values) { 
+        // search for index of duplicant
+        int index = -1;
+        for(int i = 0; i<Stats.history.Length; i++)
+        {
+            if (values.Cast<int>().SequenceEqual(Stats.history[i].Cast<int>())) index = i;
+        }
+
+        // overwrite duplicant and shift all following patterns to a smaller index
+        if (index == -1) return;
+        for(int i = index; i<Stats.history.Length; i++)
+        {
+            PlayerPrefsX.SetIntArray("Pattern" + i.ToString(), PlayerPrefsX.GetIntArray("Pattern" + (i + 1).ToString()));
+        }
+
+        // Adjust "amount" to show the correct amount of saved patterns. Last two patterns are equal, but the last one doesnt get overwritten.
+        int[] amount = PlayerPrefsX.GetIntArray("amount");
+        if (amount.Length == 0)
+        {
+            Debug.LogError("Problem with dimensions of amount array!");
+            return;
+        }
+        amount[0]--;
+        PlayerPrefsX.SetIntArray("amount", amount);
+    }
+
+    public static void LoadHistory() {
+        int[] amountArray = PlayerPrefsX.GetIntArray("amount");
+        if(amountArray.Length != 1)
+        {
+            Debug.LogError("Error with dimensions of amount array!");
+            return;
+        }
+        int amount = amountArray[0];
+        Stats.history = new int[amount][,];
+        for(int i = 0; i<amount; i++)
+        {
+            Stats.history[i] = new int[9, 9];
+            string name = "Pattern" + i.ToString();
+            int[] loadedArray = PlayerPrefsX.GetIntArray(name);
+            for(int j = 0; j<loadedArray.Length; j++)
+            {
+                Stats.history[i][j / 9, j % 9] = loadedArray[j];
+            }
+        }
     }
 
     public static DataType LoadData()
@@ -56,9 +143,3 @@ public class DataType
         //Debug.Log(Stats.backgroundColor.r);
     }
 }
-
-[System.Serializable]
-public class History {
-    public int[][,] fieldlist;
-    public int[][,] inputlist;
-} 

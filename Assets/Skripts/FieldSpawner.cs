@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class FieldSpawner : MonoBehaviour
 {
+    private int frames;
+
+    //field prefab for spawning history
+    public GameObject fieldPrefab;
+    private List<GameObject> historyFields;
+
     Solver solver;
 
     public bool solving;
@@ -25,7 +31,6 @@ public class FieldSpawner : MonoBehaviour
     private int activeMarker;
 
     // Variables for running the backtrackingStep Solver
-    private bool runningBackTrackingStep;
     private int[,] inputField, inputBackup;
     private float starttime;
 
@@ -36,14 +41,27 @@ public class FieldSpawner : MonoBehaviour
         SpawnTiles();
         SpawnLines();
         SpawnMarks();
+        frames = 0;
     }
 
     private void Update()
     {
-       
+        // press f to delete history
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            int[] amount = new int[1] { 0 };
+            PlayerPrefsX.SetIntArray("amount", amount);
+            Save_Load.LoadHistory();
+            SpawnHistory();
+            PlayerPrefs.DeleteAll();
+        }
+
+        if (frames == 0) SpawnHistory();
+        frames++;
     }
 
     private void SetDefaultStats() {
+        historyFields = new List<GameObject>();
         mainColorDisplay.color = Stats.hMainColor;
         markerColorDisplay.color = Stats.hMainColor;
         backgroundColorDisplay.color = Stats.backgroundColor;
@@ -69,8 +87,6 @@ public class FieldSpawner : MonoBehaviour
         marker = new Button[markWidth * markHeight];
         activeMarker = 0;
 
-        runningBackTrackingStep = false;
-
         height = Camera.main.orthographicSize * 2f;
         width = height / Screen.height * Screen.width;
     }
@@ -81,14 +97,14 @@ public class FieldSpawner : MonoBehaviour
         {
             case "main":
                 byte alpha1 = Stats.hMainColor.a;
-                print(Stats.hMainColor);
+                //print(Stats.hMainColor);
                 Color.RGBToHSV(Stats.hMainColor, out h, out s, out v);
-                print(h);
+                //print(h);
                 h = value;
-                print(h);
+                //print(h);
                 Stats.hMainColor = Color.HSVToRGB(h, s, v);
                 Stats.hMainColor.a = alpha1;
-                print(Stats.hMainColor);
+                //print(Stats.hMainColor);
                 Save_Load.SaveData();
                 for(int i = 0; i<field.GetLength(0); i++) { 
                     for(int j = 0; j<field.GetLength(1); j++) {
@@ -132,9 +148,15 @@ public class FieldSpawner : MonoBehaviour
         {
             for (int j = 0; j < fieldHeight; j++)
             {
-                Vector3 pos = new Vector3((i - fieldWidth / 2) * width / fieldWidth, height / yOffset - (j - fieldWidth) * width / fieldWidth, 0);
-                field[i, j] = Instantiate(tilePrefab, pos, Quaternion.identity, GameObject.Find("Canvas").transform);
+                Vector3 pos = new Vector3((i - fieldWidth / 2) * width / fieldWidth, -width/fieldWidth * (j-(fieldWidth-1)/2), 0);
+                //Debug.Log(pos);
+                field[i, j] = Instantiate(tilePrefab, pos, Quaternion.identity, GameObject.Find("MainField").transform);
                 field[i, j].GetComponentInChildren<Text>().text = "";
+                // Change y position of tile relative to the mainfield (parent of all tiles)
+                pos = field[i, j].GetComponent<RectTransform>().localPosition;
+                pos.y += field[i, j].transform.parent.GetComponent<RectTransform>().localPosition.y;
+                field[i, j].GetComponent<RectTransform>().localPosition = pos;
+
                 Vector2Int coordinates = new Vector2Int(i, j);
                 field[i, j].onClick.AddListener(() => markField(coordinates));
             }
@@ -142,7 +164,7 @@ public class FieldSpawner : MonoBehaviour
     }
 
     private void SpawnLines() {
-        Transform staticCanvas = GameObject.Find("StaticCanvas").transform;
+        Transform staticCanvas = GameObject.Find("MainField").transform;
 
         // vertical lines
         Vector3 pos = new Vector3(-width / 6, height / yOffset - (4 - fieldWidth) * width / fieldWidth);
@@ -173,6 +195,23 @@ public class FieldSpawner : MonoBehaviour
         }
     }
 
+    private void SpawnHistory() { 
+        foreach(GameObject go in historyFields)
+        {
+            Destroy(go);
+        }
+        historyFields = new List<GameObject>();
+        for(int i = 0; i<Stats.history.Length; i++)
+        {
+            int j = Stats.history.Length - 1 - i;
+            Vector3 pos = new Vector3(1.25f * Mathf.RoundToInt(Mathf.Pow(-1, j+1)), -9 - 2.5f * (j / 2), 0);
+            GameObject historyField = Instantiate(fieldPrefab, pos, Quaternion.identity, GameObject.Find("CanvasOptionsAndHistory").transform);
+            historyField.GetComponent<FieldManager>().InitButtons();
+            historyField.GetComponent<FieldManager>().WriteValues(Stats.history[i]);
+            historyFields.Add(historyField);
+        }
+    }
+
     public void SolveBtnPressed()
     {
         if (solving)
@@ -180,7 +219,6 @@ public class FieldSpawner : MonoBehaviour
             PrintSolution(inputBackup);
             solver.StopBacktracking();
             solveBtn.GetComponentInChildren<Text>().text = "Solve Sudoku";
-            runningBackTrackingStep = false;
             solving = false;
             return;
         }
@@ -205,16 +243,19 @@ public class FieldSpawner : MonoBehaviour
                 inputBackup[i, j] = numbers[i, j];
             }
         }
+        Save_Load.SavePattern(numbers);
+        Save_Load.LoadHistory();
+        SpawnHistory();
         solver = new Solver(new field(numbers), 30);
         solver.Backtracking();
     }
 
-    public void PrintSolution(int[,] solution) {
+    public void PrintSolution(int[,] solution, bool whiteFont = false) {
         for(int i  = 0; i<9; i++)
         {
             for(int j = 0; j<9; j++)
             {
-                if(field[i,j].GetComponentInChildren<Text>().text == "") {
+                if(!whiteFont && field[i,j].GetComponentInChildren<Text>().text == "") {
                     field[i, j].GetComponentInChildren<Text>().color = Stats.hMainColor;
                 }
                 field[i, j].GetComponentInChildren<Text>().text = solution[i, j]==0 ? "" : solution[i, j].ToString();

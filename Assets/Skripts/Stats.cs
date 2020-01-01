@@ -6,4 +6,5 @@ public static class Stats
 {
     public static Color32 hMainColor, hMarkerColor, backgroundColor;
     public static int speed;
+    public static int[][,] history;
 }

@@ -62,11 +62,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\changeTextOnValue.cs" />
+    <Compile Include="Assets\FieldManager.cs" />
     <Compile Include="Assets\Skripts\AnimationManager.cs" />
+    <Compile Include="Assets\Skripts\changeTextOnValue.cs" />
     <Compile Include="Assets\Skripts\CleanSolver.cs" />
     <Compile Include="Assets\Skripts\FieldSpawner.cs" />
     <Compile Include="Assets\Skripts\Manager.cs" />
+    <Compile Include="Assets\Skripts\PlayerPrefsX.cs" />
     <Compile Include="Assets\Skripts\SaveLoad.cs" />
     <Compile Include="Assets\Skripts\Solver.cs" />
     <Compile Include="Assets\Skripts\Stats.cs" />

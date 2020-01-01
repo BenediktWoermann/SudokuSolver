@@ -58,7 +58,7 @@ public class Solver
     }
 
     public bool BacktrackingStep() {
-        Debug.Log(active.row + "  " + active.column);
+        //Debug.Log(active.row + "  " + active.column);
         if (field.GetAmountOfMissingValues() == 0 && field.IsValid())
         {
             field.Print();
@@ -75,7 +75,7 @@ public class Solver
 
         bool nextPossibilityAvailable = active.TestNextPossibility();
         bool valid = field.IsValid();
-        Debug.Log(valid + "   " + active.value);
+        //Debug.Log(valid + "   " + active.value);
         if (nextPossibilityAvailable && valid) {
             if (active.nextEmpty != null)
             {

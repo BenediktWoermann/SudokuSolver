@@ -25,6 +25,12 @@ public class AnimationManager : MonoBehaviour
             case 1:
                 gameObject.GetComponent<Animator>().Play("CameraDown");
                 break;
+            case 2:
+                gameObject.GetComponent<Animator>().Play("CameraUpHistory");
+                break;
+            case 3:
+                gameObject.GetComponent<Animator>().Play("CameraDownHistory");
+                break;
         }
     }
 }

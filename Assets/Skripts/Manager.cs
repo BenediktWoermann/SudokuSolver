@@ -11,12 +11,17 @@ public class Manager : MonoBehaviour
     void Start()
     {
         LoadColor();
+        LoadHistory();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    private void LoadHistory() {
+        Save_Load.LoadHistory();
     }
 
     private void LoadColor() {
@@ -52,7 +57,7 @@ public class Manager : MonoBehaviour
         Stats.backgroundColor = new Color32(30, 30, 30, 255);
         if(read != null) 
         {
-            print(read.backgroundGreyValue);
+            //print(read.backgroundGreyValue);
             Stats.backgroundColor = new Color32(read.backgroundGreyValue, read.backgroundGreyValue, read.backgroundGreyValue, 255);
             sliderBackgroundColor.value = read.backgroundGreyValue;
         }
