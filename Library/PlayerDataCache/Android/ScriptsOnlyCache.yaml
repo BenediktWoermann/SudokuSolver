@@ -3,6 +3,7 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - AnimationManager
     - CleanSolver
+    - FieldManager
     - FieldSpawner
     - Manager
     - changeTextOnValue
@@ -12,9 +13,14 @@ ScriptsOnlyBuild:
     - UnityEditor.Tilemaps.GridPalettes
     - UnityEditor.Tilemaps.SceneViewGridManager
     - UnityEditor.Tilemaps.TileDragAndDropManager
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
-    - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.EventSystems.StandaloneInputModule
@@ -51,29 +57,31 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9688}
     - Class: 114
-      Script: {instanceID: 9820}
+      Script: {instanceID: 9760}
     - Class: 114
-      Script: {instanceID: 9854}
+      Script: {instanceID: 9822}
     - Class: 114
-      Script: {instanceID: 9894}
+      Script: {instanceID: 9856}
     - Class: 114
-      Script: {instanceID: 10330}
+      Script: {instanceID: 9896}
     - Class: 114
-      Script: {instanceID: 10540}
+      Script: {instanceID: 10332}
     - Class: 114
-      Script: {instanceID: 10730}
+      Script: {instanceID: 10542}
     - Class: 114
-      Script: {instanceID: 10926}
+      Script: {instanceID: 10734}
     - Class: 114
-      Script: {instanceID: 11156}
+      Script: {instanceID: 10930}
     - Class: 114
-      Script: {instanceID: 11232}
+      Script: {instanceID: 11160}
     - Class: 114
-      Script: {instanceID: 11620}
+      Script: {instanceID: 11228}
     - Class: 114
-      Script: {instanceID: 11654}
+      Script: {instanceID: 11238}
     - Class: 114
-      Script: {instanceID: 17492}
+      Script: {instanceID: 11626}
+    - Class: 114
+      Script: {instanceID: 11660}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -115,13 +123,19 @@ ScriptsOnlyBuild:
     className: TMP_Dropdown
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FieldManager
+  - hash:
+      serializedVersion: 2
       Hash: e7a73f5f78ba6445195ec23b74a1ce2d
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
-      Hash: f77f13ec1f3151740cd22f1056ac5b0a
+      Hash: a49adfc6ddd790e9738db2c5626a3380
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: FieldSpawner
@@ -179,6 +193,18 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_InputField
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: UnityEngine.Advertisements.dll
+    namespaceName: UnityEngine.Advertisements
+    className: CallbackExecutor
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: UnityEngine.Advertisements.dll
+    namespaceName: UnityEngine.Advertisements.Editor
+    className: Placeholder
   - hash:
       serializedVersion: 2
       Hash: 7ab0e790220bdca831fdd886b339039d
@@ -439,6 +465,12 @@ ScriptsOnlyBuild:
     className: AudioTrack
   - hash:
       serializedVersion: 2
+      Hash: 1028c39545bcfa841aaab54121e69a47
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: changeTextOnValue
+  - hash:
+      serializedVersion: 2
       Hash: ae83e830e7a90c0aff918c4c2e520825
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -551,12 +583,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 1028c39545bcfa841aaab54121e69a47
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: changeTextOnValue
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
