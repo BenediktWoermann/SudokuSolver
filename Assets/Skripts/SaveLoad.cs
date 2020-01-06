@@ -84,12 +84,20 @@ public static class Save_Load
 
     public static void LoadHistory() {
         int[] amountArray = PlayerPrefsX.GetIntArray("amount");
-        if(amountArray.Length != 1)
+        if(amountArray.Length != 1 && amountArray.Length != 0)
         {
-            Debug.LogError("Error with dimensions of amount array!");
+            Debug.LogError("Error with dimensions of amount array! Required length: 1 or 0  Found length: "+amountArray.Length);
             return;
         }
-        int amount = amountArray[0];
+        int amount;
+        if (amountArray.Length == 1)
+        {
+            amount = amountArray[0];
+        }
+        else
+        {
+            amount = 0;
+        }
         Stats.history = new int[amount][,];
         for(int i = 0; i<amount; i++)
         {

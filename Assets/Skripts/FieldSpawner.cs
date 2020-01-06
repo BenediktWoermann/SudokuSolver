@@ -167,16 +167,17 @@ public class FieldSpawner : MonoBehaviour
         Transform staticCanvas = GameObject.Find("MainField").transform;
 
         // vertical lines
-        Vector3 pos = new Vector3(-width / 6, height / yOffset - (4 - fieldWidth) * width / fieldWidth);
+        Vector3 pos = new Vector3(-width / 6, 0, 0);
+        pos = pos + staticCanvas.transform.position;
         Instantiate(vertLine, pos, Quaternion.identity, staticCanvas);
-        pos.x = width / 6;
+        pos.x = width / 6 + staticCanvas.transform.position.x;
         Instantiate(vertLine, pos, Quaternion.identity, staticCanvas);
 
         // horizontal lines
-        pos.x = 0;
-        pos.y = height / yOffset - (2.5f - fieldWidth) * width / fieldWidth;
+        pos.x = staticCanvas.transform.position.x;
+        pos.y = width/6 + staticCanvas.transform.position.y;
         Instantiate(horiLine, pos, Quaternion.identity, staticCanvas);
-        pos.y = height / yOffset - (5.5f - fieldWidth) * width / fieldWidth;
+        pos.y = -width / 6 + staticCanvas.transform.position.y;
         Instantiate(horiLine, pos, Quaternion.identity, staticCanvas);
     }
 

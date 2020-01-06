@@ -1,14 +1,14 @@
 ﻿<Properties StartupConfiguration="{32FE910A-FBAA-06F4-52E3-2B34C90C69A0}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Skripts/SaveLoad.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Skripts/FieldSpawner.cs">
     <Files>
       <File FileName="Assets/Skripts/Stats.cs" Line="1" Column="1" />
-      <File FileName="Assets/Skripts/SaveLoad.cs" Line="50" Column="20" />
-      <File FileName="Assets/Skripts/CleanSolver.cs" Line="61" Column="1" />
-      <File FileName="Assets/Skripts/PlayerPrefsX.cs" Line="1" Column="1" />
-      <File FileName="Assets/FieldManager.cs" Line="58" Column="6" />
-      <File FileName="Assets/Skripts/Manager.cs" Line="20" Column="1" />
-      <File FileName="Assets/Skripts/AnimationManager.cs" Line="29" Column="74" />
-      <File FileName="Assets/Skripts/FieldSpawner.cs" Line="33" Column="57" />
+      <File FileName="Assets/Skripts/SaveLoad.cs" Line="99" Column="24" />
+      <File FileName="Assets/Skripts/CleanSolver.cs" />
+      <File FileName="Assets/Skripts/PlayerPrefsX.cs" />
+      <File FileName="Assets/FieldManager.cs" />
+      <File FileName="Assets/Skripts/Manager.cs" />
+      <File FileName="Assets/Skripts/AnimationManager.cs" />
+      <File FileName="Assets/Skripts/FieldSpawner.cs" Line="180" Column="63" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,20 +16,17 @@
           <Node name="Sudoku Solver" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Skripts" expanded="True">
-                <Node name="SaveLoad.cs" selected="True" />
+                <Node name="FieldSpawner.cs" selected="True" />
               </Node>
             </Node>
           </Node>
         </State>
       </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="9a6b8b3f-af8a-4485-9026-6387e8197d13" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="fc8f07dc-5533-469f-a6f0-ef095dae6dcf" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
