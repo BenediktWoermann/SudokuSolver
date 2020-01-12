@@ -716,9 +716,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 125484591}
   m_Direction: 0
   m_MinValue: 1
-  m_MaxValue: 100
+  m_MaxValue: 1000
   m_WholeNumbers: 1
-  m_Value: 50
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -896,8 +896,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.49, y: 9.67}
-  m_SizeDelta: {x: 298.1, y: 160.2934}
+  m_AnchoredPosition: {x: 1.6512, y: 9.67}
+  m_SizeDelta: {x: 405.5038, y: 160.2934}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &382565876
 MonoBehaviour:
@@ -1176,7 +1176,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fieldPrefab: {fileID: 265709545258454363, guid: 12981234a3ef648d6a0243ce2bff0831,
     type: 3}
-  solving: 0
   yOffset: -10
   yOffsetMark: -0.2
   tilePrefab: {fileID: 6757478891751001666, guid: b2ab6499ce5994877a2e3b00d6c08f4f,

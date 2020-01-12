@@ -31,7 +31,7 @@ public class Manager : MonoBehaviour
         if(read != null)
         {
             Stats.speed = read.speed;
-            sliderSpeed.value = Stats.speed;
+            sliderSpeed.value = Mathf.Min(sliderSpeed.maxValue, Stats.speed);
         }
 
         Stats.hMainColor = new Color32(84, 231, 136, 189);

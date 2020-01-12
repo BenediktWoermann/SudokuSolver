@@ -1,14 +1,12 @@
 ﻿<Properties StartupConfiguration="{32FE910A-FBAA-06F4-52E3-2B34C90C69A0}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Skripts/FieldSpawner.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Skripts/Manager.cs">
     <Files>
-      <File FileName="Assets/Skripts/Stats.cs" Line="1" Column="1" />
-      <File FileName="Assets/Skripts/SaveLoad.cs" Line="99" Column="24" />
-      <File FileName="Assets/Skripts/CleanSolver.cs" />
-      <File FileName="Assets/Skripts/PlayerPrefsX.cs" />
-      <File FileName="Assets/FieldManager.cs" />
-      <File FileName="Assets/Skripts/Manager.cs" />
-      <File FileName="Assets/Skripts/AnimationManager.cs" />
-      <File FileName="Assets/Skripts/FieldSpawner.cs" Line="180" Column="63" />
+      <File FileName="Assets/Skripts/CleanSolver.cs" Line="54" Column="10" />
+      <File FileName="Assets/Skripts/FieldSpawner.cs" Line="251" Column="31" />
+      <File FileName="Assets/Skripts/Solver.cs" Line="1" Column="1" />
+      <File FileName="Assets/Skripts/changeTextOnValue.cs" Line="15" Column="20" />
+      <File FileName="Assets/Skripts/SaveLoad.cs" Line="1" Column="1" />
+      <File FileName="Assets/Skripts/Manager.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,7 +14,7 @@
           <Node name="Sudoku Solver" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Skripts" expanded="True">
-                <Node name="FieldSpawner.cs" selected="True" />
+                <Node name="Manager.cs" selected="True" />
               </Node>
             </Node>
           </Node>
@@ -26,7 +24,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="fc8f07dc-5533-469f-a6f0-ef095dae6dcf" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="84bea864-4cac-4ff4-a3c3-7e085b769e05" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

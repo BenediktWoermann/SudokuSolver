@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CleanSolver : MonoBehaviour
 {
@@ -23,7 +24,12 @@ public class CleanSolver : MonoBehaviour
 
 public class Solver 
 {
+    bool instantSolve;
+    float timeNeeded;
+    int frames = 0;
+    long steps;
     int repetitionRate;
+    float startingTime;
     private tile active;
     public field field;
     private bool backtrackingRunning;
@@ -38,60 +44,88 @@ public class Solver
 
     public void Update()
     {
+        frames++;
         // check if backtracking should run, then check if it returns true. 
         // If so, it has finished and "backtrackingRunning can be set to "false".
         repetitionRate = Stats.speed;
         for(int i = 0; i<repetitionRate; i++)
         {
-            if (backtrackingRunning && BacktrackingStep()) backtrackingRunning = false;
+            if (backtrackingRunning && BacktrackingStep()) StopBacktracking();
         }
+
+
+        // slow version for debugging
+        //if(frames%repetitionRate == 0)
+        //{
+        //    if (backtrackingRunning && BacktrackingStep()) StopBacktracking();
+        //}
     }
 
     public void Backtracking() {
+        instantSolve = (GameObject.Find("SliderSpeed").GetComponent<Slider>().value.Equals(GameObject.Find("SliderSpeed").GetComponent<Slider>().maxValue));
         backtrackingRunning = true;
+        startingTime = Time.realtimeSinceStartup;
         SetTrivialValues();
         if (field.firstEmpty != null) active = field.firstEmpty;
     }
 
     public void StopBacktracking() {
         backtrackingRunning = false;
+        //GameObject.Find("Solve").GetComponentInChildren<Text>().text = "Solve Sudoku";
     }
 
     public bool BacktrackingStep() {
         //Debug.Log(active.row + "  " + active.column);
-        if (field.GetAmountOfMissingValues() == 0 && field.IsValid())
+        //timeNeeded = Time.realtimeSinceStartup - startingTime;
+        //Debug.Log("Timer 1: " + timeNeeded + "s!");
+        //startingTime = Time.realtimeSinceStartup;
+        if (field.GetAmountOfMissingValues() == 0)
         {
             field.Print();
-            Debug.Log("Sudoku Solved!");
-            return true;
-        }
-        if(field.GetAmountOfMissingValues() == 0)
-        {
+            if (field.IsValid())
+            {
+                timeNeeded = Time.realtimeSinceStartup - startingTime;
+                Debug.Log("Sudoku Solved in " + timeNeeded + "s!");
+                return true;
+            }
             Debug.LogError("Sudoku can not be solved!");
             backtrackingRunning = false;
-            field.Print();
             return false;
         }
 
+        //timeNeeded = Time.realtimeSinceStartup - startingTime;
+        //Debug.Log("Timer 2: " + timeNeeded + "s!");
+        //startingTime = Time.realtimeSinceStartup;
+
         bool nextPossibilityAvailable = active.TestNextPossibility();
-        bool valid = field.IsValid();
+        bool valid = field.IsValidForOneTile(active.row, active.column, false);
         //Debug.Log(valid + "   " + active.value);
         if (nextPossibilityAvailable && valid) {
             if (active.nextEmpty != null)
             {
                 active = active.nextEmpty;
+                field.GetPossibleValuesForOneTile(active.row, active.column);
+                if(!instantSolve)field.Print();
+                //timeNeeded = Time.realtimeSinceStartup - startingTime;
+                //Debug.Log("Timer 3: " + timeNeeded + "s!");
+                //startingTime = Time.realtimeSinceStartup;
+                return false;
             }
             else
             {
                 field.Print();
-                Debug.Log("Sudoku Solved!");
+                timeNeeded = Time.realtimeSinceStartup - startingTime;
+                Debug.Log("Sudoku Solved in " + timeNeeded + "s!");
+                //timeNeeded = Time.realtimeSinceStartup - startingTime;
+                //Debug.Log("Timer 4: " + timeNeeded + "s!");
+                //startingTime = Time.realtimeSinceStartup;
                 return true;
             }
         }
         else
         {
-            if (!nextPossibilityAvailable)
-            {
+            //if (!nextPossibilityAvailable)
+            //{
                 if(active.previousEmpty == null)
                 {
                     Debug.LogError("No Solution Found!");
@@ -100,9 +134,12 @@ public class Solver
                 }
                 active.value = 0;
                 active = active.previousEmpty;
-            }
+            //}
         }
-        field.Print();
+        if(!instantSolve) field.Print();
+        //timeNeeded = Time.realtimeSinceStartup - startingTime;
+        //Debug.Log("Timer 5: " + timeNeeded + "s!");
+        //startingTime = Time.realtimeSinceStartup;
         return false;
     }
 
@@ -315,6 +352,17 @@ public class field
                     }
                 }
             }
+        }
+        return true;
+    }
+
+    public bool IsValidForOneTile(int row, int column, bool ignoreZeros = false) {
+        int value = tiles[row, column].value;
+        if (value == 0) return ignoreZeros;
+        for(int i = 0; i<9; i++) {
+            if (tiles[row, i].value == value && i != column) return false;
+            if (tiles[i, column].value == value && i != row) return false;
+            if (tiles[row-(row%3) + i / 3, column-(column%3) + (i % 3)].value == value && i != (row % 3) * 3 + (column % 3)) return false;
         }
         return true;
     }

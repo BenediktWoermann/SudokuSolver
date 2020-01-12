@@ -13,7 +13,6 @@ public class FieldSpawner : MonoBehaviour
 
     Solver solver;
 
-    public bool solving;
     public float yOffset, yOffsetMark;
     public static int fieldWidth, fieldHeight, markWidth, markHeight;
     private float height, width;
@@ -140,6 +139,8 @@ public class FieldSpawner : MonoBehaviour
         foreach(Button b in field) {
             b.GetComponentInChildren<Text>().text = "";
         }
+        GameObject.Find("Solve").GetComponentInChildren<Text>().text = "Solve Sudoku";
+        solver.StopBacktracking();
     }
 
     private void SpawnTiles() {
@@ -215,15 +216,14 @@ public class FieldSpawner : MonoBehaviour
 
     public void SolveBtnPressed()
     {
-        if (solving)
+        string text = GameObject.Find("Solve").GetComponentInChildren<Text>().text;
+        if (text.Equals("Stop Solving"))
         { 
             PrintSolution(inputBackup);
             solver.StopBacktracking();
             solveBtn.GetComponentInChildren<Text>().text = "Solve Sudoku";
-            solving = false;
             return;
         }
-        solving = true;
         solveBtn.GetComponentInChildren<Text>().text = "Stop Solving";
         Solve();
         return;
